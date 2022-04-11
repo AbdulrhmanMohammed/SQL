@@ -1,0 +1,589 @@
+--كيف تحذف الجدول في sql 
+
+drop table -- اسم الجدول 
+
+-- يعطيك بيانات الجدول
+
+DESC -- اسم الجدول ;
+
+
+
+: = ≡ default   -- علامة التساوي بدالها default 
+
+
+--------------------------
+constant -- قيمه ثابته 
+declare
+n constant number(2):=5;
+begin
+dbms_output.put_line(n);
+end;
+
+
+-----------------------------------
+CONSTANT variable must have initial value AND cannot be reassigned.
+--يجب أن يكون للمتغير الثابت قيمة أولية ولا يمكن إعادة تعيينه.
+------------------------------------------
+
+
+
+
+---------------------------
+
+-- كيف نقوم بانشاء الجدول 
+
+CREATE TABLE User1(
+Cid NUMBER (10) PRIMARY KEY,   --  PRIMARY KEY هي ماتككرر العدد 
+Name VARCHAR2 (25) NOT NULL ,   -- الفار شار هو حق الاسماء 
+Mobile NUMBER (10)-- اخر وحدة مافيها فاصله 
+
+);
+
+CREATE TABLE User2 (
+Cid NUMBER (10)  REFERENCES User1 (Cid),
+Email VARCHAR2 (50),
+DEY DATE, 
+FOREIGN KEY (Cid)  REFERENCES User1 (Cid) --  FOREIGN KEY الربط بين الجدوال
+ );
+ 
+ 
+ -- اضافه الاسماء في الجدوال او طريقه اضافه في الجدوال 
+ 
+ INSERT INTO User1 VALUES (1,'Abdulrhman',0507557411);  -- الطريقه الاوله 
+ 
+ INSERT ALL -- الطريقه الثانية 
+ 
+ INTO User1 VALUES (2,'ALI',0555555)
+ INTO User1 VALUES (3,'SAMI',0566666)
+ 
+SELECT * FROM DUAL;  
+--
+
+INSERT INTO User2 VALUES (11,'QRMANH511@GAMIL.COM',)
+
+INSERT ALL 
+
+
+INTO VALUES User2 (222,'dhfhd@gmail.com',)              --ماتشتغل  
+INTO VALUES User2 (333,'dsfsj@GMAIL.Com', )
+
+SELECT * FROM DUAL;
+ 
+ 
+ --   ORDER BY  ترتيب المصفوفه تصاعدي 
+ --   GROUP BY     /// تنزليا 
+ 
+ --PL/SQL
+ 
+ BEGIN -- يبدا
+ DBMS_OUTPUT.PUT_LINE('ABD');
+ 
+ END; -- النهاية 
+ 
+ 
+ 
+ 
+ 
+ declare   -- تضع فيه المتغير 
+ x number:= 5;  -- := يساوي 
+ 
+ begin -- يبدا
+  
+      
+dbms_output.put_line(x);  -- امر الطباعة 
+
+ 
+ 
+ 
+ end;  -- نهاية 
+ 
+ 
+ 
+  declare   -- تضع فيه المتغير 
+ x VARCHAR2 (30) := 'ADBULRHMAN ' ;  -- := يساوي 
+ 
+ begin --يبدا 
+  
+      
+dbms_output.put_line(x);  -- امر الطباعة 
+
+ 
+ 
+ 
+ end;  -- نهاية 
+ 
+ 
+ 
+ declare
+ x number (2) not null  := 5; -- لاتساوي 
+begin 
+x :=10; 
+dbms_output.put_line(x);
+
+end; 
+
+-- if or if and else or if and else or elsif 
+
+declare 
+x number :=:enter;    --  :=: تخلي المستخدم يدخل الرقم 
+
+begin 
+
+if x<5 then    -- then بعد ذالك لازم تكتب 
+     dbms_output.put_line (x);  
+	 
+	 else 
+	 
+	 dbms_output.put_line('no '); 
+	 
+	 end if; 
+     dbms_output.put_line('abdulrhman');
+end; 
+
+
+
+-- loop or while or for  
+
+-- الطريقه الاوله  
+declare 
+x number := 0;
+
+begin 
+
+loop  -- تكرار 
+
+
+if x=5 then 
+exit;    -- لازم تكون موجودة عشان مايتكرر 
+end if ; 
+
+dbms_output.put_line('Hello ' || x );  -- || الربط 
+x := x+1;
+
+end loop;   
+   
+   
+   
+
+end; 
+
+
+
+-- الطريقه الثانية
+declare 
+x number := 1;
+
+
+begin 
+
+loop
+dbms_output.put_line(x||' abdulrhman');
+exit when x=5;  -- 
+
+x :=x+ 1;
+end loop; 
+
+
+
+
+ end; 
+
+
+
+
+declare 
+x number :=0;
+
+begin 
+
+ while x<5 loop  -- while loop 
+   x:=x+1;
+dbms_output.put_line(x); 
+end loop; 
+
+dbms_output.put_line('ased ');  -- تبطبع لانها برا ال loop     
+ 
+
+
+end ;  
+
+
+
+
+-- for loop 
+
+begin 
+     for x in 1..5 loop
+	 dbms_output.put_line(x);
+	 end loop;
+
+
+end; 
+
+
+
+
+
+begin 
+     for x in  REVERSE  1..5 loop    -- REVERSE تقلب لك من 5 الئ 1
+	 dbms_output.put_line(x);
+	 end loop;
+
+
+end; 
+
+
+begin 
+for i in 1..10 loop              -- طباعه الاعداد الزوجيه 
+if mod(i,2)=0 then         
+dbms_output.put_line(i); 
+end if ;
+end loop; 
+
+
+dbms_output.put_line('  ');
+
+
+
+for i in 1..10 loop   -- طباعه الاعداد الفردية 
+if mod(i,2)=1 then 
+dbms_output.put_line(i); 
+end if ;
+end loop; 
+
+end; 
+
+
+
+
+--SELECT . . INTO
+
+
+
+declare 
+ id number:=:employee_id;
+ i number(6);
+ n varchar2(25);
+ s number(8,2);
+begin
+select employee_id,last_name,salary into i,n,s
+from employees
+where employee_id = id;
+ dbms_output.put_line('employee id is '||i);
+ dbms_output.put_line('his name is '||n);
+ dbms_output.put_line(', salary is '||s);
+end;
+
+
+
+declare 
+ id number:=:employee_id;
+ i employees.employee_id%Type;
+ n employees.last_name%type;
+ s employees.salary%type;
+begin
+ select employee_id,last_name,salary into i,n,s
+ from employees
+ where employee_id = id;
+if s < 10000 then
+ dbms_output.put_line('employee id is '||i);
+ dbms_output.put_line('his name is '||n);
+ dbms_output.put_line(', salary is '||s);
+else
+ dbms_output.put_line('employee salary grater than or equal to 10000');
+end if;
+end;
+
+
+
+
+
+declare 
+ mx number;
+ mn number;
+begin
+select max(salary), min(salary) into mx,mn
+ from employees;
+ dbms_output.put_line('max salary = '||mx||', min salary ='||mn);
+end;
+
+
+
+
+
+
+declare 
+ job_rec jobs%rowtype;
+begin
+select * into job_rec
+ from jobs
+ where upper(job_id) = 'IT_PROG' ;
+ dbms_output.put_line('programmer salary between '||job_rec.min_salary||
+' and '||job_rec.max_salary);
+end;
+
+
+
+
+
+select * from employees;   -- امر استرجاع البيانات 
+
+
+
+
+
+declare 
+ID NUMBER:=:ENTER_ID;  
+I employees.EMPLOYEE_ID%TYPE;  -- %TYPE تنسخ لك حجم الي في الجدول او حجم رقمه مثل number20
+F employees.FIRST_NAME%TYPE;
+L employees.LAST_NAME%TYPE;
+E employees.EMAIL	%TYPE;
+
+
+begin
+SELECT EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL INTO I,F,L,E
+FROM EMPLOYEES
+WHERE EMPLOYEE_ID = ID ;
+
+
+dbms_output.put_line('id number'||I);
+  dbms_output.put_line('F NAME'||F);
+   dbms_output.put_line('L NAME'||L);
+    dbms_output.put_line('EMAIL'||E);
+
+
+end; 
+
+
+
+declare 
+i number:=:enter_id;
+e_row  employees%rowtype;  -- تنسخ لك جميع احجام الجدول وارقامه 
+
+begin 
+
+select *  into e_row from employees
+where employee_id = i;
+
+dbms_output.put_line(e_row.employee_id||' ' || e_row.LAST_NAME ||' '|| e_row.SALARY);
+
+
+
+
+end;
+
+
+
+--Explicit Cursor 
+
+/*
+لها اربع اشياء 
+1-declare
+2-open
+3-fetch    لازم يكون فيها ال loop 
+4-close
+*/
+
+
+
+declare
+cursor emp_cur is 
+select employee_id,last_name,salary 
+from employees;
+ i employees.employee_id%type;
+ n employees.last_name%type;
+ s employees.salary%type;
+begin
+open emp_cur;
+fetch emp_cur into i,n,s;
+close emp_cur;
+dbms_output.put_line('ID: '||i);
+dbms_output.put_line('NAME: '||n);
+dbms_output.put_line('SALARY: '||s);
+end;
+
+
+--
+
+
+declare
+cursor emp_cur is 
+select employee_id,last_name,salary 
+from employees;
+ i employees.employee_id%type;
+ n employees.last_name%type;
+ s employees.salary%type;
+begin
+open emp_cur;
+loop
+fetch emp_cur into i,n,s;
+exit when emp_cur%notfound;
+dbms_output.put_line('ID: '||i);
+dbms_output.put_line('NAME: '||n);
+dbms_output.put_line('SALARY: '||s);
+dbms_output.put_line('========');
+end loop;
+dbms_output.put_line('Employees Number is '||emp_cur%rowcount);
+close emp_cur;
+end
+
+
+
+--
+
+
+
+declare
+cursor emp_cur is 
+select employee_id,last_name,salary
+from employees;
+emp_rec emp_cur%rowtype;
+begin
+open emp_cur;
+fetch emp_cur into emp_rec;
+while emp_cur%found 
+loop
+dbms_output.put_line('ID: '||emp_rec.employee_id);
+dbms_output.put_line('NAME: '||emp_rec.last_name);
+dbms_output.put_line('SALARY: '||emp_rec.salary);
+dbms_output.put_line('========');
+fetch emp_cur into emp_rec;
+end loop;
+dbms_output.put_line('Employees Number is '||emp_cur%rowcount);
+close emp_cur;
+end;
+
+
+--
+
+
+declare
+cursor emp_cur is 
+select employee_id,last_name,salary
+from employees;
+begin
+for emp_rec in emp_cur
+loop
+dbms_output.put_line('ID: '||emp_rec.employee_id);
+dbms_output.put_line('NAME: '||emp_rec.last_name);
+dbms_output.put_line('SALARY: '||emp_rec.salary);
+dbms_output.put_line('========');
+end loop;
+end;
+ 
+ 
+ --
+ 
+ 
+ begin
+for emp_rec in (select employee_id,last_name,salary
+from employees)
+loop
+dbms_output.put_line('ID: '||emp_rec.employee_id);
+dbms_output.put_line('NAME: '||emp_rec.last_name);
+dbms_output.put_line('SALARY: '||emp_rec.salary);
+dbms_output.put_line('========');
+end loop;
+end;
+
+
+
+
+
+
+--
+
+
+declare
+cursor c_cursor is select last_name,employee_id,salary  from employees  where employee_id=100;
+l employees.last_name%type;
+em employees.employee_id%type;
+s employees.salary%type;
+begin 
+open c_cursor;
+
+fetch c_cursor into l,em,s;
+
+close c_cursor;
+dbms_output.put_line('last n '||l);
+dbms_output.put_line('id '||em);
+dbms_output.put_line('salary  '||s);
+
+
+end;
+
+
+--   حل الواجب الرابع 
+
+--انشاء جدول 
+
+create table exp_emp(
+i_d number(10),
+ename varchar2(35),
+sal number (8,2),
+h_date date
+);
+
+-- جلب البيانات 
+
+declare 
+cursor os_cur is 
+select employee_id, first_name  ||' '|| last_name as full_name, salary, hire_date from employees
+where((sysdate()- hire_date)/365)>25;
+
+i employees.employee_id%Type;
+n varchar2(25);
+s employees.salary%type;
+h date; 
+
+
+begin
+
+open os_cur;
+
+loop
+
+fetch os_cur into i,n,s,h;
+exit when os_cur%notfound;
+insert into exp_emp values (i,n,s,h);
+
+end loop;
+
+close os_cur;
+
+
+end;
+
+
+--طباعة المعلومات 
+
+declare
+cursor os_cur is
+ select i_d,ename, sal , h_date
+ from exp_emp; 
+ 
+ i exp_emp.i_d%type;
+n exp_emp.ename%type;
+s exp_emp.sal%type;
+h exp_emp.h_date%type;
+
+begin 
+
+open os_cur;
+loop 
+fetch os_cur into i,n,s,h;
+exit when os_cur%notfound;
+
+dbms_output.put_line('id  = '||i);
+dbms_output.put_line('namee  =  '||n);
+dbms_output.put_line('salary  = '||s);
+dbms_output.put_line('hire date  = '||h);
+dbms_output.put_line('years of service = '|| floor ((sysdate()-h)/365));
+dbms_output.put_line(' =========== ');
+
+end loop;
+
+close os_cur;
+
+end; 
+
