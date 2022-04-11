@@ -1,0 +1,324 @@
+
+--------
+
+
+
+CREATE TABLE items(
+i_id NUMBER(10) PRIMARY KEY ,
+I_name VARCHAR2 (35) , 
+Qty NUMBER (35)
+
+);
+
+
+CREATE TABLE Purchase (
+p_id NUMBER(10) PRIMARY KEY , 
+i_id NUMBER (10)   ,
+p_qty NUMBER (35) ,
+p_price NUMBER (35) , 
+total_price NUMBER (35) ,
+FOREIGN KEY (i_id)  REFERENCES items (i_id) --  FOREIGN KEY الربط بين الجدوال
+);
+
+
+
+
+
+
+CREATE TABLE sales (
+s_id NUMBER(10) PRIMARY KEY , 
+i_id NUMBER(10)  ,
+s_qty NUMBER(35) , 
+s_price NUMBER(35) , 
+total_price NUMBER (35), 
+FOREIGN KEY (i_id) REFERENCES items (i_id)
+
+);
+
+
+---------
+
+
+
+
+
+
+--q1
+
+CREATE OR REPLACE PROCEDURE item_add(i in items.i_id%type , n in items.I_name%type , q in items.Qty%type)
+is 
+begin 
+INSERT INTO items (i_id,I_name,Qty) values (i,n,q);
+
+EXCEPTION
+WHEN dup_val_on_index THEN
+DBMS_OUTPUT.PUT_LINE(' غير رقم السعلة موجود مسبقا !! ');
+
+end;
+
+
+
+
+
+
+declare 
+i items.i_id%type:=:enter_id;
+n items.I_name%type:=:enter_nmae;
+q items.Qty%type:=0;
+begin
+item_add(i,n,q);
+dbms_output.put_line('Save items');
+end;
+
+select * from items
+
+---------
+
+
+
+
+
+
+
+--q2---
+CREATE OR REPLACE PROCEDURE purs_item(i in Purchase.i_id%type,pq in Purchase.p_qty%type ,pp in Purchase.p_price%type  )
+is 
+p Purchase.p_id%type;
+too Purchase.total_price%type;
+ex_pa exception;
+PRAGMA EXCEPTION_INIT(ex_pa,-02291);
+begin
+select nvl(max(p_id),0)+1 into p
+from Purchase;
+
+update items set Qty = Qty + pq
+where i_id = i ; 
+ 
+ too:=pq*pp;
+ 
+INSERT INTO Purchase (p_id,i_id,p_qty,p_price,total_price) values(p,i,pq,pp,too);
+
+
+exception
+when NO_DATA_FOUND then 
+dbms_output.put_line('ERorr plese agien!!');
+when ex_pa then
+dbms_output.put_line('ERorr plese agien!!');
+
+end;
+
+
+
+declare
+i  Purchase.i_id%type:=:enter_id;
+pq  Purchase.p_qty%type:=:enter_number_qty;
+pp Purchase.p_price%type:=:enter_price;
+begin 
+
+purs_item(i,pq,pp);
+dbms_output.put_line('save purchase ');
+end;
+
+
+
+
+
+
+
+------
+
+--q3
+
+CREATE OR REPLACE PROCEDURE sale_item(i in sales.i_id%type , sq in sales.s_qty%type , sp in sales.s_price%type )
+is 
+s sales.s_id%type;
+tot sales.total_price%type;
+ma_ex exception;
+qtt items.Qty%type;
+begin 
+
+
+
+select Qty into qtt from items 
+where  i_id = i ;
+
+
+if qtt < sq then 
+raise ma_ex ;
+end if;
+
+
+
+select nvl(max(s_id),0)+1 into s
+from sales;
+
+
+
+
+tot:= sq*sp;
+
+INSERT INTO sales (s_id , i_id ,s_qty ,s_price , total_price ) VALUES (s ,i , sq , sp, tot  );
+
+update items set Qty = Qty - sq
+where i_id = i ; 
+
+
+exception 
+when ma_ex then 
+dbms_output.put_line('ERorr Qty Not availbale !');
+
+
+end; 
+
+
+declare 
+i sales.i_id%type :=:enter_id;
+sq sales.s_qty%type:=:enter_sQty;
+sp sales.s_price%type:=:enter_sPrice;
+begin 
+
+
+sale_item(i ,sq ,sp );
+dbms_output.put_line('Save sales ');
+
+
+end;
+-------------
+
+
+
+
+
+--q4------
+
+CREATE OR REPLACE FUNCTION avg_pr(i in Purchase.i_id%type)
+RETURN NUMBER IS 
+pq NUMBER;
+pp NUMBER;
+AV NUMBER;
+XN number;
+BEGIN 
+Select i_id into XN from 
+items where i_id = i;
+
+SELECT SUM(p_qty),SUM(p_price)  into pq,pp
+FROM Purchase
+WHERE i_id = i ;
+
+
+AV:=pp/pq;
+RETURN AV;
+
+exception
+when NO_DATA_FOUND then 
+dbms_output.put_line('ERorr id plese agien ');
+RETURN null;
+
+
+END;
+
+
+
+
+
+DECLARE
+i Purchase.i_id%type:=:EnterID_AVG;
+A Number;
+begin
+
+A:=avg_pr(i);
+DBMS_OUTPUT.put_line('AVG = '||avg_pr(i));
+
+end;
+
+
+------
+
+
+
+
+
+
+--q5---
+
+
+CREATE OR REPLACE FUNCTION sal_avg(i in sales.i_id%type)
+RETURN NUMBER IS 
+sq NUMBER;
+sp number;
+av number;
+xidd number;
+begin
+
+select i_id into xidd from 
+items where i_id = i ;
+
+select Sum(s_qty),Sum(s_price) into sq,sp
+from sales
+where i_id = i;
+
+
+av := sq/sp;
+RETURN av;
+
+
+exception
+when NO_DATA_FOUND then 
+dbms_output.put_line('Erorr number id plese agien ');
+RETURN null;
+end;
+
+
+
+
+declare 
+idd sales.i_id%type:=:Enter_id_avg;
+s number;
+begin 
+s := sal_avg(idd);
+DBMS_OUTPUT.put_line('AVG Number ==  '||sal_avg(idd));
+
+end;
+
+
+
+--q6--
+CREATE OR REPLACE FUNCTION profit(i in sales.i_id%type)
+RETURN NUMBER IS 
+pr number; 
+begin
+
+pr:=avg_pr(i)-sal_avg(i);
+RETURN pr;
+
+end;
+
+
+
+declare
+idn sales.i_id%type:=:entr_id;
+prr number;
+begin
+prr:=profit(idn);
+dbms_output.put_line('profit = '||profit(idn));
+end;
+
+-----------------
+
+
+
+--q7---
+CREATE OR REPLACE TRIGGER item_count
+AFTER UPDATE 
+OF Qty 
+ON items 
+FOR EACH ROW 
+BEGIN 
+DBMS_OUTPUT.PUT_LINE(' I_ID : '||:OLD.i_id);
+DBMS_OUTPUT.PUT_LINE(' Name : '||:OLD.i_name);
+DBMS_OUTPUT.PUT_LINE('OLD QTY : '||:OLD.Qty);
+DBMS_OUTPUT.PUT_LINE('New Qty : '||:new.Qty);
+DBMS_OUTPUT.PUT_LINE('----------');
+end;
+
+---------------
